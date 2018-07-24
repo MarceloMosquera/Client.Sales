@@ -1,4 +1,7 @@
 node {
+   def msbuild = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\MSBuild\\15.0\\bin\\msbuild.exe"
+   def vstest = "C:\Program Files (x86)\Microsoft Visual Studio\2017\TestAgent\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
+
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
       git 'https://github.com/MarceloMosquera/Client.Sales.git'
@@ -9,7 +12,7 @@ node {
          //sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
       } else {
   		bat 'nuget restore Client.Sales.WebApp.sln'
-		bat "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\MSBuild\\15.0\\bin\\msbuild.exe\" Client.Sales.WebApp.sln /p:Configuration=Release /target:publish /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
+		bat "${msbuild} Client.Sales.WebApp.sln /p:Configuration=Release /target:publish /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
         //bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       }
    }
@@ -18,7 +21,7 @@ node {
       //archiveArtifacts "Client.Sales.WebApp\\bin\\Release\\**"
    }
    stage('Tests') {
-       mstest testResultsFile:"**/*.trx", keepLongStdio: true
+       bat "${vstest} Client.Sales.WebApp.sln "
    }
 
 }
