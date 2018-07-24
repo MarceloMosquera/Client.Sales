@@ -15,6 +15,10 @@ node {
    }
    stage('Results') {
       //junit '**/target/surefire-reports/TEST-*.xml'
-      archive 'Client.Sales.WebApp/bin/Release/**'
+      archiveArtifacts "Client.Sales.WebApp\\bin\\Release\\**"
    }
+   stage('Tests') {
+       mstest testResultsFile:"**/*.trx", keepLongStdio: true
+   }
+
 }
