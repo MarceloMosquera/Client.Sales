@@ -1,0 +1,20 @@
+node {
+   stage('Preparation') { // for display purposes
+      // Get some code from a GitHub repository
+      git 'https://github.com/MarceloMosquera/Client.Sales.git'
+   }
+   stage('Build') {
+      // Run the maven build
+      if (isUnix()) {
+         //sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      } else {
+  		bat 'nuget restore Client.Sales.WebApp.sln'
+		bat "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\MSBuild\\15.0\\bin\\msbuild.exe\" Client.Sales.WebApp.sln /p:Configuration=Release /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
+        //bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+      }
+   }
+   stage('Results') {
+      //junit '**/target/surefire-reports/TEST-*.xml'
+      archive 'Client.Sales.WebApp/bin/Release/**'
+   }
+}
