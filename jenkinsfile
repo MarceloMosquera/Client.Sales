@@ -21,7 +21,7 @@ node {
       //archiveArtifacts "Client.Sales.WebApp\\bin\\Release\\**"
    }
    stage('Tests') {
-       bat "${vstest} Client.Sales.WebApp.sln "
+       bat "${vstest} Client.Sales.WebApp.sln"
    }
 
 }
